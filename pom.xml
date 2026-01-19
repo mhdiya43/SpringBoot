@@ -37,7 +37,7 @@
         <version>3.5.7</version>
         <scope>compile</scope>
     </dependency>
-    
+    <!--add the dependency of rest-->
         <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-data-rest</artifactId>
