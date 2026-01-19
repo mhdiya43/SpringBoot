@@ -4,34 +4,41 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+@RepositoryRestResource
 public interface VoitureRepo extends CrudRepository<Voiture, Long> {
 
-    // Sélectionner les voitures par marque
-    List<Voiture> findByMarque(String marque);
+    // /api/voitures/search/findByMarque?marque=Toyota
+    List<Voiture> findByMarque(@Param("marque") String marque);
 
-    //  Sélectionner les voitures par couleur
-    List<Voiture> findByCouleur(String couleur);
+    // /api/voitures/search/findByCouleur?couleur=Rouge
+    List<Voiture> findByCouleur(@Param("couleur") String couleur);
 
-    //  Sélectionner les voitures par année
-    List<Voiture> findByAnnee(int annee);
+    // /api/voitures/search/findByAnnee?annee=2018
+    List<Voiture> findByAnnee(@Param("annee") int annee);
 
-    //  Sélectionner les voitures par marque ET modèle
-    List<Voiture> findByMarqueAndModele(String marque, String modele);
+    // /api/voitures/search/findByMarqueAndModele?marque=Toyota&modele=Corolla
+    List<Voiture> findByMarqueAndModele(
+        @Param("marque") String marque,
+        @Param("modele") String modele
+    );
 
-    //  Sélectionner les voitures par marque OU couleur
-    List<Voiture> findByMarqueOrCouleur(String marque, String couleur);
+    // /api/voitures/search/findByMarqueOrCouleur?marque=Toyota&couleur=Rouge
+    List<Voiture> findByMarqueOrCouleur(
+        @Param("marque") String marque,
+        @Param("couleur") String couleur
+    );
 
-    // Sélectionner les voitures par marque et trier par année (ASC)
-    List<Voiture> findByMarqueOrderByAnneeAsc(String marque);
+    // /api/voitures/search/findByMarqueOrderByAnneeAsc?marque=Toyota
+    List<Voiture> findByMarqueOrderByAnneeAsc(@Param("marque") String marque);
 
-    // Même chose que findByMarque MAIS avec JPQL
-    @Query("select v from Voiture v where v.marque = ?1")
-    List<Voiture> chercherParMarque(String marque);
+    // JPQL exposé
+    @Query("select v from Voiture v where v.marque = :marque")
+    List<Voiture> chercherParMarque(@Param("marque") String marque);
 
-    // Marque qui se termine par une valeur (LIKE %x)
-    @Query("select v from Voiture v where v.marque like %?1")
-    List<Voiture> findByMarqueEndsWith(String marque);
+    // LIKE %x
+    @Query("select v from Voiture v where v.marque like %:suffix")
+    List<Voiture> findByMarqueEndsWith(@Param("suffix") String suffix);
 }
-
-
